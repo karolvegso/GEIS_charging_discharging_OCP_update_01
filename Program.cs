@@ -86,11 +86,15 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
             }
 
             // initialize EIS array
-            double[,] eis_array = new double[no_freq_points, 6];
+            double[,] eis_array = new double[no_freq_points, 5];
 
             // save voltage data
             // path to voltage data
             string vol_filename = @"c:\GEIS_data\voltage_data.txt";
+
+            // save time data
+            // path to time data
+            string time_filename = @"c:\GEIS_data\time_data.txt";
 
             // connect to first Autolab instrument
             InstrumentConnectionManager autolab_manager = new InstrumentConnectionManager(@"C:\Program Files\Metrohm Autolab\Autolab SDK 2.1\Hardware Setup Files");
@@ -236,6 +240,12 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                                 {
                                     volw.WriteLine(vol_current_str);
                                 }
+                                // write timestamp to text file
+                                using (StreamWriter timew = System.IO.File.AppendText(time_filename))
+                                {
+                                    string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                                    timew.WriteLine(timestamp);
+                                }
                                 // update charging / discharging direction
                                 direction = "charging";
                                 // set FRA frequency
@@ -254,14 +264,14 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                                 double Z_phase = my_instrument.Fra.Phase[0];
                                 double Z_real = my_instrument.Fra.Real[0];
                                 double Z_imag = my_instrument.Fra.Imaginary[0];
-                                double Z_time = my_instrument.Fra.TimeData[my_instrument.Fra.TimeData.Length - 1];
+                                //double Z_time = my_instrument.Fra.TimeData[my_instrument.Fra.TimeData.Length - 1];
                                 // fill EIS array
                                 eis_array[index_0, 0] = Z_freq;
                                 eis_array[index_0, 1] = Z_real;
                                 eis_array[index_0, 2] = Z_imag;
                                 eis_array[index_0, 3] = Z_total;
                                 eis_array[index_0, 4] = Z_phase;
-                                eis_array[index_0, 5] = Z_time;
+                                //eis_array[index_0, 5] = Z_time;
                                 // increment counter
                                 counter += 1;
                             }
@@ -291,14 +301,14 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                             double Z_phase = my_instrument.Fra.Phase[0];
                             double Z_real = my_instrument.Fra.Real[0];
                             double Z_imag = my_instrument.Fra.Imaginary[0];
-                            double Z_time = my_instrument.Fra.TimeData[my_instrument.Fra.TimeData.Length - 1];
+                            //double Z_time = my_instrument.Fra.TimeData[my_instrument.Fra.TimeData.Length - 1];
                             // fill EIS array
                             eis_array[index_0, 0] = Z_freq;
                             eis_array[index_0, 1] = Z_real;
                             eis_array[index_0, 2] = Z_imag;
                             eis_array[index_0, 3] = Z_total;
                             eis_array[index_0, 4] = Z_phase;
-                            eis_array[index_0, 5] = Z_time;
+                            //eis_array[index_0, 5] = Z_time;
 
                             // condition to save data
                             if (index_0 == (no_freq_points - 1))
@@ -321,7 +331,7 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                                 // main for loop to read pixel values
                                 for (int index_1 = 0; index_1 < no_freq_points; index_1++)
                                 {
-                                    for (int index_2 = 0; index_2 < 6; index_2++)
+                                    for (int index_2 = 0; index_2 < 5; index_2++)
                                     {
                                         sw.Write(eis_array[index_1, index_2] + "\t");
                                     }
@@ -390,6 +400,12 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                                 {
                                     volw.WriteLine(vol_current_str);
                                 }
+                                // write timestamp to text file
+                                using (StreamWriter timew = System.IO.File.AppendText(time_filename))
+                                {
+                                    string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                                    timew.WriteLine(timestamp);
+                                }
                                 // update charging / discharging direction
                                 direction = "discharging";
                                 // set FRA frequency
@@ -408,14 +424,14 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                                 double Z_phase = my_instrument.Fra.Phase[0];
                                 double Z_real = my_instrument.Fra.Real[0];
                                 double Z_imag = my_instrument.Fra.Imaginary[0];
-                                double Z_time = my_instrument.Fra.TimeData[my_instrument.Fra.TimeData.Length - 1];
+                                //double Z_time = my_instrument.Fra.TimeData[my_instrument.Fra.TimeData.Length - 1];
                                 // fill EIS array
                                 eis_array[index_0, 0] = Z_freq;
                                 eis_array[index_0, 1] = Z_real;
                                 eis_array[index_0, 2] = Z_imag;
                                 eis_array[index_0, 3] = Z_total;
                                 eis_array[index_0, 4] = Z_phase;
-                                eis_array[index_0, 5] = Z_time;
+                                //eis_array[index_0, 5] = Z_time;
                                 // increment counter
                                 counter += 1;
                             }
@@ -445,14 +461,14 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                             double Z_phase = my_instrument.Fra.Phase[0];
                             double Z_real = my_instrument.Fra.Real[0];
                             double Z_imag = my_instrument.Fra.Imaginary[0];
-                            double Z_time = my_instrument.Fra.TimeData[my_instrument.Fra.TimeData.Length - 1];
+                            //double Z_time = my_instrument.Fra.TimeData[my_instrument.Fra.TimeData.Length - 1];
                             // fill EIS array
                             eis_array[index_0, 0] = Z_freq;
                             eis_array[index_0, 1] = Z_real;
                             eis_array[index_0, 2] = Z_imag;
                             eis_array[index_0, 3] = Z_total;
                             eis_array[index_0, 4] = Z_phase;
-                            eis_array[index_0, 5] = Z_time;
+                            //eis_array[index_0, 5] = Z_time;
 
                             // condition to save data
                             if (index_0 == (no_freq_points - 1))
@@ -475,7 +491,7 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                                 // main for loop to read pixel values
                                 for (int index_1 = 0; index_1 < no_freq_points; index_1++)
                                 {
-                                    for (int index_2 = 0; index_2 < 6; index_2++)
+                                    for (int index_2 = 0; index_2 < 5; index_2++)
                                     {
                                         sw.Write(eis_array[index_1, index_2] + "\t");
                                     }
