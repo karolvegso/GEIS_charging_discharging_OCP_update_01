@@ -8,6 +8,7 @@ using EcoChemie.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
@@ -73,21 +74,13 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
             // define waiting time after stop detection
             Console.WriteLine($"The waiting time after stop detection is: {args[15]}");
             int wait_time_after_stop = int.Parse(args[15]);
-
-            // calculate number of frequency points
-            int no_freq_points = (int)Math.Abs((freq_exp_stop - freq_exp_start) / freq_exp_step) + 1;
-
-            // initialize frequency array
-            float[] freq_exp_array = new float[no_freq_points];
-            // fill frequency array
-            for (int index_0 = 0; index_0 < no_freq_points; index_0++)
-            {
-                freq_exp_array[index_0] = freq_exp_start + index_0 * freq_exp_step;
-            }
-
-            // initialize EIS array
-            double[,] eis_array = new double[no_freq_points, 5];
-
+            // tell if list of frequencies is used
+            Console.WriteLine($"The list of frequencies is used Yes/No: {args[16]}");
+            string read_freq_list = args[16];
+            // tell if list of frequencies is ascending or descending
+            Console.WriteLine($"The list of frequencies has direction: {args[17]}");
+            string direction_freq_list = args[17];
+            
             // save voltage data
             // path to voltage data
             string vol_filename = @"c:\GEIS_data\voltage_data.txt";
@@ -95,6 +88,153 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
             // save time data
             // path to time data
             string time_filename = @"c:\GEIS_data\time_data.txt";
+
+            // path to list of ascending frequencies 
+            string path_to_ascending_freq_list = @"c:\GEIS_data\list_of_frequencies_ascending.txt";
+            // path to list of descending frequencies 
+            string path_to_descending_freq_list = @"c:\GEIS_data\list_of_frequencies_descending.txt";
+
+            // initialize number of frequency points variable, it will be filled later
+            int no_freq_points = 0;
+
+            // initialize empty frequency list array
+            double[] freq_array = new double[0];
+
+            // decide how to generate frequency data
+            // decide if calculated frequencies should be used or list of frequencies
+            if (read_freq_list == "yes")
+            {
+                if (direction_freq_list == "descending")
+                {
+                    // inialize frequency list
+                    List<float> freq_list = new List<float>();
+                    // read text file
+                    using (StreamReader freq_reader = new StreamReader(path_to_descending_freq_list))
+                    {
+                        string line;
+                        while ((line = freq_reader.ReadLine()) != null)
+                        {
+                            // read frequency value from text file
+                            float freq_value = float.Parse(line);
+                            // add frequency value to list
+                            freq_list.Add(freq_value);
+                        }
+                    }
+                    // get length of list of frequencies
+                    no_freq_points = freq_list.Count;
+                    // initialize frequency list array
+                    freq_array = new double[no_freq_points];
+                    // fill frequency list array
+                    for (int index_0 = 0; index_0 < no_freq_points; index_0++)
+                    {
+                        freq_array[index_0] = freq_list[index_0];
+                        Console.WriteLine(freq_array[index_0]);
+                    }
+                }
+                else if (direction_freq_list == "ascending")
+                {
+                    // inialize frequency list
+                    List<float> freq_list = new List<float>();
+                    // read text file
+                    using (StreamReader freq_reader = new StreamReader(path_to_ascending_freq_list))
+                    {
+                        string line;
+                        while ((line = freq_reader.ReadLine()) != null)
+                        {
+                            // read frequency value from text file
+                            float freq_value = float.Parse(line);
+                            // add frequency value to list
+                            freq_list.Add(freq_value);
+                        }
+                    }
+                    // get length of list of frequencies
+                    no_freq_points = freq_list.Count;
+                    // initialize frequency list array
+                    freq_array = new double[no_freq_points];
+                    // fill frequency list array
+                    for (int index_0 = 0; index_0 < no_freq_points; index_0++)
+                    {
+                        freq_array[index_0] = freq_list[index_0];
+                        Console.WriteLine(freq_array[index_0]);
+                    }
+                }
+                else
+                {
+                    // inialize frequency list
+                    List<float> freq_list = new List<float>();
+                    // read text file
+                    using (StreamReader freq_reader = new StreamReader(path_to_descending_freq_list))
+                    {
+                        string line;
+                        while ((line = freq_reader.ReadLine()) != null)
+                        {
+                            // read frequency value from text file
+                            float freq_value = float.Parse(line);
+                            // add frequency value to list
+                            freq_list.Add(freq_value);
+                        }
+                    }
+                    // get length of list of frequencies
+                    no_freq_points = freq_list.Count;
+                    // initialize frequency list array
+                    freq_array = new double[no_freq_points];
+                    // fill frequency list array
+                    for (int index_0 = 0; index_0 < no_freq_points; index_0++)
+                    {
+                        freq_array[index_0] = freq_list[index_0];
+                        Console.WriteLine(freq_array[index_0]);
+                    }
+                }
+            }
+            else if (read_freq_list == "no")
+            {
+                // calculate number of frequency points
+                no_freq_points = (int)Math.Abs((freq_exp_stop - freq_exp_start) / freq_exp_step) + 1;
+
+                // initialize frequency exponent array
+                float[] freq_exp_array = new float[no_freq_points];
+                // initialize frequency array
+                freq_array = new double[no_freq_points];
+                // fill frequency array
+                for (int index_0 = 0; index_0 < no_freq_points; index_0++)
+                {
+                    freq_exp_array[index_0] = freq_exp_start + index_0 * freq_exp_step;
+                    double freq_value = Math.Pow(10, freq_exp_array[index_0]);
+                    freq_value = Math.Round(freq_value, 6);
+                    freq_array[index_0] = freq_value;
+                    Console.WriteLine(freq_array[index_0]);
+                }
+            }
+            else
+            {
+                // inialize frequency list
+                List<float> freq_list = new List<float>();
+                // read text file
+                using (StreamReader freq_reader = new StreamReader(path_to_descending_freq_list))
+                {
+                    string line;
+                    while ((line = freq_reader.ReadLine()) != null)
+                    {
+                        // read frequency value from text file
+                        float freq_value = float.Parse(line);
+                        // add frequency value to list
+                        freq_list.Add(freq_value);
+                    }
+                }
+                // get length of list of frequencies
+                no_freq_points = freq_list.Count;
+                // initialize frequency list array
+                freq_array = new double[no_freq_points];
+                // fill frequency list array
+                for (int index_0 = 0; index_0 < no_freq_points; index_0++)
+                {
+                    freq_array[index_0] = freq_list[index_0];
+                    Console.WriteLine(freq_array[index_0]);
+                }
+            }
+
+            // initialize EIS array
+            double[,] eis_array = new double[no_freq_points, 5];
 
             // connect to first Autolab instrument
             InstrumentConnectionManager autolab_manager = new InstrumentConnectionManager(@"C:\Program Files\Metrohm Autolab\Autolab SDK 2.1\Hardware Setup Files");
@@ -249,9 +389,7 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                                 // update charging / discharging direction
                                 direction = "charging";
                                 // set FRA frequency
-                                double freq_current = Math.Pow(10, freq_exp_array[index_0]);
-                                freq_current = Math.Round(freq_current, 3);
-                                my_instrument.Fra.Frequency = freq_current;
+                                my_instrument.Fra.Frequency = freq_array[index_0];
                                 // wait time at the beginning of EIS measurement
                                 System.Threading.Thread.Sleep(wait_time_begin_EIS_meas);
                                 // perform measurement by starting FRA
@@ -286,9 +424,7 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                         else
                         {
                             // set FRA frequency
-                            double freq_current = Math.Pow(10, freq_exp_array[index_0]);
-                            freq_current = Math.Round(freq_current, 3);
-                            my_instrument.Fra.Frequency = freq_current;
+                            my_instrument.Fra.Frequency = freq_array[index_0];
                             // wait time after frequency change
                             System.Threading.Thread.Sleep(wait_time_freq_change);
                             // perform measurement by starting FRA
@@ -326,16 +462,17 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                                 string full_path = Path.Combine(root_folder, filename_full);
 
                                 // create object StreamWriter
-                                StreamWriter sw = new StreamWriter(full_path);
-
-                                // main for loop to read pixel values
-                                for (int index_1 = 0; index_1 < no_freq_points; index_1++)
+                                using (StreamWriter sw = new StreamWriter(full_path))
                                 {
-                                    for (int index_2 = 0; index_2 < 5; index_2++)
+                                    // main for loop to read pixel values
+                                    for (int index_1 = 0; index_1 < no_freq_points; index_1++)
                                     {
-                                        sw.Write(eis_array[index_1, index_2] + "\t");
+                                        for (int index_2 = 0; index_2 < 5; index_2++)
+                                        {
+                                            sw.Write(eis_array[index_1, index_2] + "\t");
+                                        }
+                                        sw.WriteLine();
                                     }
-                                    sw.Write("\n");
                                 }
                                 // switch off eletrochemical cell of Autolab
                                 my_instrument.Ei.CellOnOff = EI.EICellOnOff.Off;
@@ -409,9 +546,7 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                                 // update charging / discharging direction
                                 direction = "discharging";
                                 // set FRA frequency
-                                double freq_current = Math.Pow(10, freq_exp_array[index_0]);
-                                freq_current = Math.Round(freq_current, 3);
-                                my_instrument.Fra.Frequency = freq_current;
+                                my_instrument.Fra.Frequency = freq_array[index_0];
                                 // wait time at the beginning of EIS measurement
                                 System.Threading.Thread.Sleep(wait_time_begin_EIS_meas);
                                 // perform measurement by starting FRA
@@ -446,9 +581,7 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                         else
                         {
                             // set FRA frequency
-                            double freq_current = Math.Pow(10, freq_exp_array[index_0]);
-                            freq_current = Math.Round(freq_current, 3);
-                            my_instrument.Fra.Frequency = freq_current;
+                            my_instrument.Fra.Frequency = freq_array[index_0];
                             // wait time after frequency change
                             System.Threading.Thread.Sleep(wait_time_freq_change);
                             // perform measurement by starting FRA
@@ -486,16 +619,17 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                                 string full_path = Path.Combine(root_folder, filename_full);
 
                                 // create object StreamWriter
-                                StreamWriter sw = new StreamWriter(full_path);
-
-                                // main for loop to read pixel values
-                                for (int index_1 = 0; index_1 < no_freq_points; index_1++)
+                                using (StreamWriter sw = new StreamWriter(full_path))
                                 {
-                                    for (int index_2 = 0; index_2 < 5; index_2++)
+                                    // main for loop to read pixel values
+                                    for (int index_1 = 0; index_1 < no_freq_points; index_1++)
                                     {
-                                        sw.Write(eis_array[index_1, index_2] + "\t");
+                                        for (int index_2 = 0; index_2 < 5; index_2++)
+                                        {
+                                            sw.Write(eis_array[index_1, index_2] + "\t");
+                                        }
+                                        sw.WriteLine();
                                     }
-                                    sw.Write("\n");
                                 }
                                 // switch off eletrochemical cell of Autolab
                                 my_instrument.Ei.CellOnOff = EI.EICellOnOff.Off;
@@ -517,21 +651,23 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                 // open with shared read/write access
                 FileStream fs = new FileStream(path_to_stop_file, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
                 // create stream reader object
-                StreamReader sr = new StreamReader(fs);
-                // read first line
-                string firstLine = sr.ReadLine();
-                //Console.WriteLine(firstLine);
-                // condition
-                if (firstLine == "stop")
+                using (StreamReader sr = new StreamReader(fs))
                 {
-                    Console.WriteLine("The main while loop of GEIS measurement is broken.");
-                    Console.WriteLine("The GEIS script is stopped");
-                    System.Threading.Thread.Sleep(wait_time_after_stop);
-                    break;
-                }
-                else
-                {
-                    continue;
+                    // read first line
+                    string firstLine = sr.ReadLine();
+                    //Console.WriteLine(firstLine);
+                    // condition
+                    if (firstLine == "stop")
+                    {
+                        Console.WriteLine("The main while loop of GEIS measurement is broken.");
+                        Console.WriteLine("The GEIS script is stopped");
+                        System.Threading.Thread.Sleep(wait_time_after_stop);
+                        break;
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
 
