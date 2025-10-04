@@ -127,7 +127,7 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                     // fill frequency list array
                     for (int index_0 = 0; index_0 < no_freq_points; index_0++)
                     {
-                        freq_array[index_0] = freq_list[index_0];
+                        freq_array[index_0] = Math.Round(freq_list[index_0], 6);
                         Console.WriteLine(freq_array[index_0]);
                     }
                 }
@@ -154,7 +154,7 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                     // fill frequency list array
                     for (int index_0 = 0; index_0 < no_freq_points; index_0++)
                     {
-                        freq_array[index_0] = freq_list[index_0];
+                        freq_array[index_0] = Math.Round(freq_list[index_0], 6); ;
                         Console.WriteLine(freq_array[index_0]);
                     }
                 }
@@ -181,7 +181,7 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                     // fill frequency list array
                     for (int index_0 = 0; index_0 < no_freq_points; index_0++)
                     {
-                        freq_array[index_0] = freq_list[index_0];
+                        freq_array[index_0] = Math.Round(freq_list[index_0], 6); ;
                         Console.WriteLine(freq_array[index_0]);
                     }
                 }
@@ -228,7 +228,7 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                 // fill frequency list array
                 for (int index_0 = 0; index_0 < no_freq_points; index_0++)
                 {
-                    freq_array[index_0] = freq_list[index_0];
+                    freq_array[index_0] = Math.Round(freq_list[index_0], 6); ;
                     Console.WriteLine(freq_array[index_0]);
                 }
             }
