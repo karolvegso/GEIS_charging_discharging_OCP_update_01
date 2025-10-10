@@ -89,6 +89,9 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
             // path to time data
             string time_filename = @"c:\GEIS_data\time_data.txt";
 
+            // save charge/discharge switch time data
+            string time_switch = @"C:\GEIS_data\time_charge_discharge.txt";
+
             // path to list of ascending frequencies 
             string path_to_ascending_freq_list = @"c:\GEIS_data\list_of_frequencies_ascending.txt";
             // path to list of descending frequencies 
@@ -258,11 +261,18 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
             // print serial number of Autolab with FRA module
             Console.WriteLine($"Fra sdk-measurement on {my_instrument.GetSerialNumber()}");
 
+            // initialize counter for charging and discharging events
+            int counter_events = 0;
+            // set maximum charging and discharging events
+            int max_events = 5;
+
             // switch off eletrochemical cell of Autolab
             my_instrument.Ei.CellOnOff = EI.EICellOnOff.Off;
             // read current voltage or potential
             // default ocp procedure
             const string procedure_ocp = @"C:\GEIS_data\Measure_OCP_Karol.nox";
+            // condition for charging or discharging
+            string direction = string.Empty;
             // load ocp procedure
             var procedureFilename = my_instrument.LoadProcedure(procedure_ocp);
             var procedureRun = my_instrument.PrepareProcedure(procedure_ocp);
@@ -283,10 +293,10 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
             // wait 1 s
             System.Threading.Thread.Sleep(1000);
 
-            // condition for charging or discharging
-            string direction = string.Empty;
             if (vol_current < vol_max)
             {
+                // increnment counter for charging and discharging events
+                counter_events++;
                 Console.WriteLine("Do battery charging.");
                 direction = "charging";
                 // set offset/DC curent
@@ -294,10 +304,83 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
             }
             else
             {
+                // increnment counter for charging and discharging events
+                counter_events++;
                 Console.WriteLine("Do battery discharging.");
                 direction = "discharging";
                 // set offset/DC curent
                 my_instrument.Ei.Setpoint = (-1.0f) * offset_current;
+            }
+
+            // define first while loop to check battery cell potential
+            // get right direction, charging or discharging
+            while (counter_events < max_events)
+            {
+                // load ocp procedure
+                procedureFilename = my_instrument.LoadProcedure(procedure_ocp);
+                procedureRun = my_instrument.PrepareProcedure(procedure_ocp);
+                // do ocp measurement
+                //Console.WriteLine("Measuring ocp");
+                procedureRun.Measure();
+                // Monitor ocp measurement
+                do
+                {
+                    //Console.Write(".");
+                    Task.Delay(1000);
+                } while (procedureRun.IsMeasuring);
+                //Console.WriteLine("Finished ocp measurement.");
+                // Show results
+                vol_current = DumpTables(procedureRun);
+                // print initial potential on the battery cell
+                Console.WriteLine($"The initial potential on the battery cell is: {vol_current}");
+                // wait 1 s
+                System.Threading.Thread.Sleep(1000);
+
+                if (direction == "charging" && vol_current < vol_max)
+                {
+                    // increment counter for charging and discharging events
+                    counter_events++;
+                    Console.WriteLine("Do battery charging.");
+                    direction = "charging";
+                }
+                else if (direction == "charging" && vol_current >= vol_max)
+                {
+                    // empty counter for charging and discharging events
+                    counter_events=0;
+                    Console.WriteLine("Do battery discharging.");
+                    direction = "discharging";
+                }
+                else if (direction == "discharging" && vol_current >= vol_max)
+                {
+                    // increment counter for charging and discharging events
+                    counter_events++;
+                    Console.WriteLine("Do battery discharging.");
+                    direction = "discharging";
+                }
+                else if (direction == "discharging" && vol_current < vol_max)
+                {
+                    // empty counter for charging and discharging events
+                    counter_events=0;
+                    Console.WriteLine("Do battery charging.");
+                    direction = "charging";
+                }
+            }
+
+            // set battery cell DC current
+            if (direction == "charging")
+            {
+                // set offset/DC curent
+                my_instrument.Ei.Setpoint = offset_current;
+            }
+            else if (direction == "discharging")
+            {
+                // set offset/DC curent
+                my_instrument.Ei.Setpoint = (-1.0f) * offset_current;
+            }
+            else
+            {
+                // set direction
+                direction = "unknown";
             }
 
             // set mode to galvanostatic mode for GEIS
@@ -412,13 +495,40 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                                 //eis_array[index_0, 5] = Z_time;
                                 // increment counter
                                 counter += 1;
+                                // empty counter for charging and discharging events
+                                counter_events = 0;
                             }
                             else
                             {
-                                // update charging / discharging direction
-                                direction = "discharging";
-                                // break for cycle
-                                break;
+                                // increment counter for charging and discharging events 
+                                counter_events++;
+                                if (counter_events >= max_events)
+                                {
+                                    // update charging / discharging direction
+                                    direction = "discharging";
+                                    // write timestamp to text file
+                                    using (StreamWriter timeswitch = System.IO.File.AppendText(time_switch))
+                                    {
+                                        string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                                        timeswitch.WriteLine(timestamp);
+                                    }
+                                    // break for cycle
+                                    break;
+                                }
+                                else if (counter_events < max_events && counter_events >= 0)
+                                {
+                                    // update charging / discharging direction
+                                    direction = "charging";
+                                    // break for cycle
+                                    break;
+                                }
+                                else
+                                {
+                                    // update charging / discharging direction
+                                    direction = "charging";
+                                    // break for cycle
+                                    break;
+                                }
                             }
                         }
                         else
@@ -569,13 +679,40 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                                 //eis_array[index_0, 5] = Z_time;
                                 // increment counter
                                 counter += 1;
+                                // empty counter for charging and discharging events
+                                counter_events = 0;
                             }
                             else
                             {
-                                // update charging / discharging direction
-                                direction = "charging";
-                                // break for cycle
-                                break;
+                                // increment counter for charging and discharging events 
+                                counter_events++;
+                                if (counter_events >= max_events)
+                                {
+                                    // update charging / discharging direction
+                                    direction = "charging";
+                                    // write timestamp to text file
+                                    using (StreamWriter timeswitch = System.IO.File.AppendText(time_switch))
+                                    {
+                                        string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                                        timeswitch.WriteLine(timestamp);
+                                    }
+                                    // break for cycle
+                                    break;
+                                }
+                                else if (counter_events < max_events && counter_events >= 0)
+                                {
+                                    // update charging / discharging direction
+                                    direction = "discharging";
+                                    // break for cycle
+                                    break;
+                                }
+                                else
+                                {
+                                    // update charging / discharging direction
+                                    direction = "discharging";
+                                    // break for cycle
+                                    break;
+                                }
                             }
                         }
                         else
@@ -662,10 +799,12 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                         Console.WriteLine("The main while loop of GEIS measurement is broken.");
                         Console.WriteLine("The GEIS script is stopped");
                         System.Threading.Thread.Sleep(wait_time_after_stop);
+                        // break main while loop
                         break;
                     }
                     else
                     {
+                        // continue main while loop
                         continue;
                     }
                 }
