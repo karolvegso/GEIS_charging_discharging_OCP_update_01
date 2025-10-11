@@ -402,6 +402,8 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
             // wait 1 s
             System.Threading.Thread.Sleep(1000);
 
+            // empty counter for charging and discharging events
+            counter_events = 0;
             // initialize counter
             int counter = 0;
             // main while loop
@@ -512,6 +514,8 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                                         string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                                         timeswitch.WriteLine(timestamp);
                                     }
+                                    // empty counter for charging and discharging events
+                                    counter_events = 0;
                                     // break for cycle
                                     break;
                                 }
@@ -696,6 +700,8 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                                         string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                                         timeswitch.WriteLine(timestamp);
                                     }
+                                    // empty counter for charging and discharging events
+                                    counter_events = 0;
                                     // break for cycle
                                     break;
                                 }
