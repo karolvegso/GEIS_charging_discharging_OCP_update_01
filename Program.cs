@@ -18,7 +18,7 @@ using static System.Net.WebRequestMethods;
 using EI = EcoChemie.Autolab.Sdk.EI;
 using Instrument = EcoChemie.Autolab.Sdk.Instrument;
 
-namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
+namespace GEIS_charge_discharge_Autolab_ConsoleApp_05
 {
     internal class Program
     {
@@ -80,7 +80,10 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
             // tell if list of frequencies is ascending or descending
             Console.WriteLine($"The list of frequencies has direction: {args[17]}");
             string direction_freq_list = args[17];
-            
+            // tell electochemical cell current range
+            Console.WriteLine($"The electrochemical cell current range is: {args[17]}");
+            string current_range = args[18];
+
             // save voltage data
             // path to voltage data
             string vol_filename = @"c:\GEIS_data\voltage_data.txt";
@@ -346,7 +349,7 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                 else if (direction == "charging" && vol_current >= vol_max)
                 {
                     // empty counter for charging and discharging events
-                    counter_events=0;
+                    counter_events = 0;
                     Console.WriteLine("Do battery discharging.");
                     direction = "discharging";
                 }
@@ -360,7 +363,7 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
                 else if (direction == "discharging" && vol_current < vol_max)
                 {
                     // empty counter for charging and discharging events
-                    counter_events=0;
+                    counter_events = 0;
                     Console.WriteLine("Do battery charging.");
                     direction = "charging";
                 }
@@ -387,7 +390,91 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_04
             my_instrument.Ei.Mode = EI.EIMode.Galvanostatic;
 
             // Select the appropriate CurrentRange
-            my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR10_1mA;
+            if (current_range == "CR00_1000A")
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR00_1000A;
+            }
+            else if (current_range == "CR01_100A")
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR01_100A;
+            }
+            else if (current_range == "CR02_80A")
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR02_80A;
+            }
+            else if (current_range == "CR03_50A")
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR03_50A;
+            }
+            else if (current_range == "CR04_40A")
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR04_40A;
+            }
+            else if (current_range == "CR05_20A")
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR05_20A;
+            }
+            else if (current_range == "CR06_10A")
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR06_10A;
+            }
+            else if (current_range == "CR07_1A")
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR07_1A;
+            }
+            else if (current_range == "CR08_100mA")
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR08_100mA;
+            }
+            else if (current_range == "CR09_10mA")
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR09_10mA;
+            }
+            else if (current_range == "CR10_1mA")
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR10_1mA;
+            }
+            else if (current_range == "CR11_100uA")
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR11_100uA;
+            }
+            else if (current_range == "CR12_10uA")
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR12_10uA;
+            }
+            else if (current_range == "CR13_1uA")
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR13_1uA;
+            }
+            else if (current_range == "CR14_100nA")
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR14_100nA;
+            }
+            else if (current_range == "CR15_10nA")
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR15_10nA;
+            }
+            else if (current_range == "CR16_1nA")
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR16_1nA;
+            }
+            else if (current_range == "CR17_100pA")
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR17_100pA;
+            }
+            else if (current_range == "CR18_10pA")
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR18_10pA;
+            }
+            else if (current_range == "CR19_1pA")
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR19_1pA;
+            }
+            else
+            {
+                my_instrument.Ei.CurrentRange = EI.EICurrentRange.CR10_1mA;
+            }
+
             // set high stability measurement
             my_instrument.Ei.Bandwidth = EI.EIBandwidth.High_Stability;
             // switch on the Fra-DSG relay on the PGSTAT

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AD129F72-2644-427B-9231-DAADE21A9383}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>GEIS_charge_discharge_Autolab_ConsoleApp_05</RootNamespace>
+    <AssemblyName>GEIS_charge_discharge_Autolab_ConsoleApp_05</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EcoChemie.Autolab.Extensions">
+      <HintPath>..\..\GEIS_charge_discharge_Autolab_ConsoleApp_02\GEIS_charge_discharge_Autolab_ConsoleApp_02\bin\Debug\EcoChemie.Autolab.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="EcoChemie.Autolab.Sdk">
+      <HintPath>..\..\GEIS_charge_discharge_Autolab_ConsoleApp_02\GEIS_charge_discharge_Autolab_ConsoleApp_02\bin\Debug\EcoChemie.Autolab.Sdk.dll</HintPath>
+    </Reference>
+    <Reference Include="EcoChemie.Autolab.SDK.Extensions">
+      <HintPath>..\..\GEIS_charge_discharge_Autolab_ConsoleApp_02\GEIS_charge_discharge_Autolab_ConsoleApp_02\bin\Debug\EcoChemie.Autolab.SDK.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="EcoChemie.Autolab.Sdk.Nova">
+      <HintPath>C:\Program Files\Metrohm Autolab\Autolab SDK 2.1\EcoChemie.Autolab.Sdk.Nova.dll</HintPath>
+    </Reference>
+    <Reference Include="EcoChemie.Shared100">
+      <HintPath>C:\Program Files\Metrohm Autolab\Autolab SDK 2.1\EcoChemie.Shared100.dll</HintPath>
+    </Reference>
+    <Reference Include="EcoChemie100">
+      <HintPath>..\..\GEIS_charge_discharge_Autolab_ConsoleApp_02\GEIS_charge_discharge_Autolab_ConsoleApp_02\bin\Debug\EcoChemie100.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WinUSBNet, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\WinUSBNet.2.1.0\lib\net45\WinUSBNet.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
