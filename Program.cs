@@ -81,7 +81,7 @@ namespace GEIS_charge_discharge_Autolab_ConsoleApp_05
             Console.WriteLine($"The list of frequencies has direction: {args[17]}");
             string direction_freq_list = args[17];
             // tell electochemical cell current range
-            Console.WriteLine($"The electrochemical cell current range is: {args[17]}");
+            Console.WriteLine($"The electrochemical cell current range is: {args[18]}");
             string current_range = args[18];
 
             // save voltage data
